@@ -1,0 +1,40 @@
+version: 2
+updates:
+  # NuGet dependencies (BitMono.* + ASP.NET)
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "nuget"
+    reviewers:
+      - "@me"
+    assignees:
+      - "sunnamed434"
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    reviewers:
+      - "@me"
+    assignees:
+      - "sunnamed434"
+
+  # Dockerfile base images (dotnet sdk/aspnet)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "docker"
+    reviewers:
+      - "@me"
+    assignees:
+      - "sunnamed434"
