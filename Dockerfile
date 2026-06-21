@@ -9,6 +9,5 @@ RUN dotnet publish BitMono.ObfuscationService/BitMono.ObfuscationService.csproj 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENV ASPNETCORE_HTTP_PORTS=8080
-EXPOSE 8080
+# Listen port comes from HTTP_PORTS (Aspire) or ASPNETCORE_URLS (standalone docker run).
 ENTRYPOINT ["dotnet", "BitMono.ObfuscationService.dll"]

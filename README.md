@@ -39,7 +39,7 @@ Or build the container:
 
 ```bash
 docker build -t bitmono-obfuscation-service .
-docker run -p 8080:8080 bitmono-obfuscation-service
+docker run -p 8743:8743 -e HTTP_PORTS=8743 bitmono-obfuscation-service
 ```
 
-The container listens on `8080`.
+Aspire sets `HTTP_PORTS` automatically. Standalone, pick any free port via `HTTP_PORTS` or `ASPNETCORE_URLS`.
