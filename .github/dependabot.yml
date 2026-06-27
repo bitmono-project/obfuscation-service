@@ -8,8 +8,6 @@ updates:
     labels:
       - "dependencies"
       - "nuget"
-    reviewers:
-      - "@me"
     assignees:
       - "sunnamed434"
 
@@ -21,8 +19,6 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
-    reviewers:
-      - "@me"
     assignees:
       - "sunnamed434"
 
@@ -34,7 +30,5 @@ updates:
     labels:
       - "dependencies"
       - "docker"
-    reviewers:
-      - "@me"
     assignees:
       - "sunnamed434"
