@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BitMono.Host" Version="0.42.1" />
-    <PackageReference Include="BitMono.Obfuscation" Version="0.42.1" />
-    <PackageReference Include="BitMono.Protections" Version="0.42.1" />
+    <PackageReference Include="BitMono.Host" Version="0.43.0" />
+    <PackageReference Include="BitMono.Obfuscation" Version="0.43.0" />
+    <PackageReference Include="BitMono.Protections" Version="0.43.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.6" />
   </ItemGroup>
 
