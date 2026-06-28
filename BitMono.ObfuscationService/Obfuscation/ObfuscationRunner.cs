@@ -25,12 +25,30 @@ public sealed class ObfuscationRunner
         "LogError", "LogWarning", "GetGroups", "AddGroup", "DeleteGroup", "GetState"
     ];
 
-    public async Task<byte[]> ObfuscateAsync(string fileName, byte[] input, IReadOnlyList<string> protections, CancellationToken ct)
+    public async Task<byte[]> ObfuscateAsync(
+        string fileName,
+        byte[] input,
+        IReadOnlyList<string> protections,
+        IReadOnlyList<byte[]> dependencies,
+        byte[]? signingKey,
+        CancellationToken ct)
     {
-        var outputDir = Path.Combine(Path.GetTempPath(), "bitmono-obf", Guid.NewGuid().ToString("N"));
+        // workDir holds both the output and the (optional) signing key; the key sits OUTSIDE outputDir
+        // so it isn't mistaken for the obfuscated output, and the whole tree is wiped in the finally.
+        var workDir = Path.Combine(Path.GetTempPath(), "bitmono-obf", Guid.NewGuid().ToString("N"));
+        var outputDir = Path.Combine(workDir, "out");
         Directory.CreateDirectory(outputDir);
         try
         {
+            // StrongNameKeyFile is NullGuard-protected (throws on null), so default to "" — BitMono
+            // treats empty as "don't sign" and writes the output unsigned.
+            var strongNameKeyFile = string.Empty;
+            if (signingKey is { Length: > 0 })
+            {
+                strongNameKeyFile = Path.Combine(workDir, "signing.snk");
+                await File.WriteAllBytesAsync(strongNameKeyFile, signingKey, ct);
+            }
+
             var module = new BitMonoModule(
                 configureContainer: container => container.AddProtections(),
                 obfuscationSettings: new ObfuscationSettings
@@ -39,6 +57,7 @@ public sealed class ObfuscationRunner
                     Tips = false,
                     OutputDirectoryName = outputDir,
                     ReferencesDirectoryName = string.Empty,
+                    StrongNameKeyFile = strongNameKeyFile,
                     RandomStrings = RenamerStrings,
                 },
                 protectionSettings: BuildProtectionSettings(protections),
@@ -47,7 +66,9 @@ public sealed class ObfuscationRunner
             var provider = await new BitMonoApplication().RegisterModule(module).BuildAsync(ct);
             var starter = new BitMonoStarter(provider);
 
-            var info = new CompleteFileInfo(fileName, input, new List<byte[]>(), outputDir);
+            // BitMono resolves the target's references against these bytes (it reads each one's real
+            // assembly name itself, so filenames don't matter). Framework/BCL is resolved from disk.
+            var info = new CompleteFileInfo(fileName, input, dependencies.ToList(), outputDir);
             if (!await starter.StartAsync(info, ct))
                 throw new InvalidOperationException("Obfuscation failed.");
 
@@ -56,7 +77,7 @@ public sealed class ObfuscationRunner
         }
         finally
         {
-            try { Directory.Delete(outputDir, recursive: true); } catch { /* best effort */ }
+            try { Directory.Delete(workDir, recursive: true); } catch { /* best effort */ }
         }
     }
 
