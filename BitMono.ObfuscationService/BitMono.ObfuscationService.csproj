@@ -10,7 +10,7 @@
     <PackageReference Include="BitMono.Host" Version="0.45.0" />
     <PackageReference Include="BitMono.Obfuscation" Version="0.45.0" />
     <PackageReference Include="BitMono.Protections" Version="0.45.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup>
