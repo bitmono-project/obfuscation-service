@@ -6,7 +6,7 @@ RUN dotnet restore BitMono.ObfuscationService/BitMono.ObfuscationService.csproj
 COPY . .
 RUN dotnet publish BitMono.ObfuscationService/BitMono.ObfuscationService.csproj -c Release -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "BitMono.ObfuscationService.dll"]
